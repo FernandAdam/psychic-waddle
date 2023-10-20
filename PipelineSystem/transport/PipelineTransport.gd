@@ -1,0 +1,2 @@
+extends Pipeline
+class_name PipelineTransport

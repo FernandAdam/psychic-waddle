@@ -1,0 +1,130 @@
+[gd_scene load_steps=11 format=3 uid="uid://b3155dmrvngt1"]
+
+[ext_resource type="Script" path="res://PipelineSystem/Pipeline.gd" id="1_ngfa4"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_xxcid"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="3_b2ov1"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="4_47v3v"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="5_nsebk"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/expression_guard.gd" id="6_ifqmi"]
+[ext_resource type="Shader" path="res://experiments/pipeline_system/volume_show.gdshader" id="7_4h7je"]
+[ext_resource type="PackedScene" uid="uid://b43vqhfvpca6" path="res://Liquid/Liquid.tscn" id="8_trejx"]
+
+[sub_resource type="Resource" id="Resource_74oe6"]
+script = ExtResource("6_ifqmi")
+expression = "snapped_to == []"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2dj4p"]
+resource_local_to_scene = true
+shader = ExtResource("7_4h7je")
+shader_parameter/volume = 0.0
+shader_parameter/max_volume = 10.0
+
+[node name="Pipeline" type="CharacterBody2D"]
+z_index = 1
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_ngfa4")
+
+[node name="PipelineStateChart" type="Node" parent="."]
+script = ExtResource("2_xxcid")
+
+[node name="CompoundState" type="Node" parent="PipelineStateChart"]
+script = ExtResource("3_b2ov1")
+initial_state = NodePath("Placed")
+
+[node name="Hold" type="Node" parent="PipelineStateChart/CompoundState"]
+script = ExtResource("4_47v3v")
+
+[node name="Transition" type="Node" parent="PipelineStateChart/CompoundState/Hold"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Placed")
+event = &"place"
+
+[node name="Transition2" type="Node" parent="PipelineStateChart/CompoundState/Hold"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Snapped")
+event = &"snap"
+
+[node name="Snapped" type="Node" parent="PipelineStateChart/CompoundState"]
+script = ExtResource("4_47v3v")
+
+[node name="Snapped" type="Node" parent="PipelineStateChart/CompoundState/Snapped"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Hold")
+event = &"unsnap"
+
+[node name="Snapped2" type="Node" parent="PipelineStateChart/CompoundState/Snapped"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Connected")
+event = &"place"
+
+[node name="Placed" type="Node" parent="PipelineStateChart/CompoundState"]
+script = ExtResource("4_47v3v")
+
+[node name="Transition" type="Node" parent="PipelineStateChart/CompoundState/Placed"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Connected")
+event = &"snap"
+
+[node name="Transition2" type="Node" parent="PipelineStateChart/CompoundState/Placed"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Hold")
+event = &"carry"
+
+[node name="Connected" type="Node" parent="PipelineStateChart/CompoundState"]
+script = ExtResource("4_47v3v")
+
+[node name="Transition" type="Node" parent="PipelineStateChart/CompoundState/Connected"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Used")
+event = &"fill"
+
+[node name="Transition2" type="Node" parent="PipelineStateChart/CompoundState/Connected"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Placed")
+event = &"unsnap"
+guard = SubResource("Resource_74oe6")
+
+[node name="hold" type="Node" parent="PipelineStateChart/CompoundState/Connected"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Hold")
+event = &"carry"
+
+[node name="Used" type="Node" parent="PipelineStateChart/CompoundState"]
+script = ExtResource("4_47v3v")
+
+[node name="Transition" type="Node" parent="PipelineStateChart/CompoundState/Used"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Connected")
+event = &"empty"
+
+[node name="carry" type="Node" parent="PipelineStateChart/CompoundState/Used"]
+script = ExtResource("5_nsebk")
+to = NodePath("../../Hold")
+event = &"carry"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_2dj4p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="SnapPoints" type="Node2D" parent="."]
+
+[node name="Liquid" parent="." instance=ExtResource("8_trejx")]
+visible = false
+
+[connection signal="state_entered" from="PipelineStateChart/CompoundState/Hold" to="." method="_on_hold_state_entered"]
+[connection signal="state_exited" from="PipelineStateChart/CompoundState/Hold" to="." method="_on_hold_state_exited"]
+[connection signal="state_physics_processing" from="PipelineStateChart/CompoundState/Hold" to="." method="_on_hold_state_physics_processing"]
+[connection signal="state_entered" from="PipelineStateChart/CompoundState/Snapped" to="." method="_on_snapped_state_entered"]
+[connection signal="state_exited" from="PipelineStateChart/CompoundState/Snapped" to="." method="_on_snapped_state_exited"]
+[connection signal="state_physics_processing" from="PipelineStateChart/CompoundState/Snapped" to="." method="_on_snapped_state_physics_processing"]
+[connection signal="state_entered" from="PipelineStateChart/CompoundState/Placed" to="." method="_on_placed_state_entered"]
+[connection signal="state_exited" from="PipelineStateChart/CompoundState/Placed" to="." method="_on_placed_state_exited"]
+[connection signal="state_physics_processing" from="PipelineStateChart/CompoundState/Placed" to="." method="_on_placed_state_physics_processing"]
+[connection signal="state_entered" from="PipelineStateChart/CompoundState/Connected" to="." method="_on_connected_state_entered"]
+[connection signal="state_exited" from="PipelineStateChart/CompoundState/Connected" to="." method="_on_connected_state_exited"]
+[connection signal="state_physics_processing" from="PipelineStateChart/CompoundState/Connected" to="." method="_on_connected_state_physics_processing"]
+[connection signal="state_entered" from="PipelineStateChart/CompoundState/Used" to="." method="_on_used_state_entered"]
+[connection signal="state_exited" from="PipelineStateChart/CompoundState/Used" to="." method="_on_used_state_exited"]
+[connection signal="state_physics_processing" from="PipelineStateChart/CompoundState/Used" to="." method="_on_used_state_physics_processing"]

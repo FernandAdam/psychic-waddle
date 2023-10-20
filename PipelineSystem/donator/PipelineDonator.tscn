@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://b40xwvjfxjqyw"]
+
+[ext_resource type="PackedScene" uid="uid://b3155dmrvngt1" path="res://PipelineSystem/Pipeline.tscn" id="1_n7bbh"]
+[ext_resource type="Script" path="res://PipelineSystem/donator/PipelineDonator.gd" id="1_vqlln"]
+[ext_resource type="Texture2D" uid="uid://bfs4gq6wfyi75" path="res://PipelineSystem/donator/mechanical/pump.png" id="3_u0ny2"]
+[ext_resource type="Shader" path="res://experiments/pipeline_system/volume_show.gdshader" id="3_xfxek"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l54gh"]
+resource_local_to_scene = true
+shader = ExtResource("3_xfxek")
+shader_parameter/volume = 0.0
+shader_parameter/max_volume = 10.0
+
+[node name="PipelineDonator" instance=ExtResource("1_n7bbh")]
+script = ExtResource("1_vqlln")
+output_flow = 60.0
+output_delay = 0.5
+
+[node name="Sprite2D" parent="." index="1"]
+material = SubResource("ShaderMaterial_l54gh")
+texture = ExtResource("3_u0ny2")
+
+[node name="CollisionShape2D" parent="." index="2"]
+position = Vector2(0, -1)
+
+[node name="Timer" type="Timer" parent="." index="5"]

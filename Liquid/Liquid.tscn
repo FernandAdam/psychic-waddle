@@ -1,0 +1,136 @@
+[gd_scene load_steps=14 format=3 uid="uid://b43vqhfvpca6"]
+
+[ext_resource type="Script" path="res://Liquid/Liquid.gd" id="1_ul8di"]
+[ext_resource type="Shader" path="res://Liquid/goop.gdshader" id="2_d0hay"]
+[ext_resource type="Texture2D" uid="uid://dr0ixh54urkss" path="res://Liquid/Sprite-0002.png" id="3_ihjqv"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="4_j1dwj"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="5_bbd8m"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="6_w44pb"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="7_unk6h"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_umvv0"]
+resource_local_to_scene = true
+shader = ExtResource("2_d0hay")
+shader_parameter/pixelFactor = 0.462
+shader_parameter/volume = 20.0
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_n5m6f"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ocneq"]
+size = Vector2(0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_36ftk"]
+shader = ExtResource("2_d0hay")
+shader_parameter/pixelFactor = 0.2
+shader_parameter/volume = 500.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uibpb"]
+shader = ExtResource("2_d0hay")
+shader_parameter/pixelFactor = 0.491
+shader_parameter/volume = 500.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_5c1v2"]
+viewport_path = NodePath("SubViewport")
+
+[node name="Liquid" type="CharacterBody2D"]
+z_index = 1
+scale = Vector2(0.1, 0.1)
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_ul8di")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_umvv0")
+texture = SubResource("CanvasTexture_n5m6f")
+region_enabled = true
+region_rect = Rect2(0, 0, 40, 40)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ocneq")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("4_j1dwj")
+
+[node name="CompoundState" type="Node" parent="StateChart"]
+script = ExtResource("5_bbd8m")
+initial_state = NodePath("Transferred")
+
+[node name="Transferred" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("6_w44pb")
+
+[node name="place" type="Node" parent="StateChart/CompoundState/Transferred"]
+script = ExtResource("7_unk6h")
+to = NodePath("../../Free")
+event = &"place"
+
+[node name="Free" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("6_w44pb")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(100, 100)
+
+[node name="Polygon2D" type="Polygon2D" parent="SubViewport"]
+material = SubResource("ShaderMaterial_36ftk")
+position = Vector2(50, 50)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_ihjqv")
+skeleton = NodePath("Skeleton2D")
+polygon = PackedVector2Array(63.5444, -1.04716, 54.1441, -0.236791, 45.0679, 1.7081, 34.6951, 5.27374, 25.781, 11.2705, 18.6498, 17.9156, 12.9771, 24.0744, 7.30454, 31.5298, 3.25267, 40.7681, 0.173258, 50.8167, -1.28541, 60.8653, -0.637115, 69.2932, 0.497406, 78.8556, 2.11815, 85.0144, 5.35964, 91.6595, 8.60114, 98.4666, 12.4909, 104.139, 18.6498, 110.298, 25.1327, 115.647, 33.5606, 121.157, 42.4747, 124.723, 52.3613, 127.802, 60.9512, 128.612, 68.8929, 128.288, 77.3207, 127.316, 86.0728, 124.885, 93.3661, 122.129, 101.146, 117.105, 107.629, 111.433, 114.76, 103.977, 120.919, 94.7389, 125.295, 84.042, 128.374, 70.5898, 129.023, 58.4342, 127.078, 46.2786, 123.674, 36.7162, 118.164, 27.64, 111.032, 19.0501, 104.225, 12.5671, 93.8523, 5.59789, 84.1279, 1.87018, 75.3758, -0.236791, 68.2446, -0.885089)
+uv = PackedVector2Array(63.5444, -1.04716, 54.1441, -0.236791, 45.0679, 1.7081, 34.6951, 5.27374, 25.781, 11.2705, 18.6498, 17.9156, 12.9771, 24.0744, 7.30454, 31.5298, 3.25267, 40.7681, 0.173258, 50.8167, -1.28541, 60.8653, -0.637115, 69.2932, 0.497406, 78.8556, 2.11815, 85.0144, 5.35964, 91.6595, 8.60114, 98.4666, 12.4909, 104.139, 18.6498, 110.298, 25.1327, 115.647, 33.5606, 121.157, 42.4747, 124.723, 52.3613, 127.802, 60.9512, 128.612, 68.8929, 128.288, 77.3207, 127.316, 86.0728, 124.885, 93.3661, 122.129, 101.146, 117.105, 107.629, 111.433, 114.76, 103.977, 120.919, 94.7389, 125.295, 84.042, 128.374, 70.5898, 129.023, 58.4342, 127.078, 46.2786, 123.674, 36.7162, 118.164, 27.64, 111.032, 19.0501, 104.225, 12.5671, 93.8523, 5.59789, 84.1279, 1.87018, 75.3758, -0.236791, 68.2446, -0.885089)
+polygons = [PackedInt32Array(39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 42, 41, 40)]
+bones = ["Bone2D", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.51, 0.51, 0.92, 0.92, 0.92, 0.92, 0.51, 0.51, 0.51, 0, 0, 0, 0, 0), "Bone2D2", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.41, 0.41, 0.41, 0.41, 0.83, 0.83, 0.83, 0.41, 0.41, 0.41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Bone2D3", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.42, 0.42, 0.42, 0.42, 0.9, 0.9, 0.9, 0.9, 0.42, 0.42, 0.42, 0.42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Bone2D4", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.34, 0.34, 0.34, 0.34, 0.34, 0.83, 0.83, 0.83, 0.34, 0.34, 0.34, 0.34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Bone2D5", PackedFloat32Array(0, 0, 0, 0, 0.05, 0.61, 0.61, 0.56, 0.56, 0.86, 1, 1, 0.86, 0.56, 0.56, 0.56, 0.56, 0.56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Bone2D6", PackedFloat32Array(0.46, 0.46, 0.46, 0.46, 1, 1, 1, 0.46, 0.46, 0.46, 0.46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), "Bone2D7", PackedFloat32Array(0.95, 0.95, 0.37, 0.37, 0.37, 0.37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.37, 0.37, 0.37, 0.37, 0.95, 0.95), "Bone2D8", PackedFloat32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.51, 0.51, 0.51, 0.9, 0.9, 0.9, 0.51, 0.51, 0.51, 0.51)]
+
+[node name="Skeleton2D" type="Skeleton2D" parent="SubViewport/Polygon2D"]
+position = Vector2(64, 64)
+
+[node name="Bone2D" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+scale = Vector2(12.8436, 3.69187)
+rest = Transform2D(5.56364, 0, 0, 3.69187, 0, 0)
+
+[node name="Bone2D2" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = 0.785398
+scale = Vector2(7.96781, 3.69187)
+rest = Transform2D(3.93409, 3.93409, -2.61054, 2.61054, 0, 0)
+
+[node name="Bone2D3" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = 1.5708
+scale = Vector2(6.92364, 3.69187)
+rest = Transform2D(-2.43195e-07, 5.56364, -3.69187, -1.61377e-07, 0, 0)
+
+[node name="Bone2D4" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = 2.35619
+scale = Vector2(6.86472, 3.69187)
+rest = Transform2D(-3.93409, 3.93409, -2.61054, -2.61054, 0, 0)
+
+[node name="Bone2D5" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = -3.14159
+scale = Vector2(6.60364, 3.69187)
+rest = Transform2D(-5.56364, -4.86389e-07, 3.22753e-07, -3.69187, 0, 0)
+
+[node name="Bone2D6" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = -2.35619
+scale = Vector2(9.18402, 3.69187)
+rest = Transform2D(-3.93409, -3.93409, 2.61054, -2.61054, 0, 0)
+
+[node name="Bone2D7" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = -1.5708
+scale = Vector2(9.16352, 4.00046)
+rest = Transform2D(6.63458e-08, -5.56364, 3.69187, 4.40251e-08, 0, 0)
+
+[node name="Bone2D8" type="Bone2D" parent="SubViewport/Polygon2D/Skeleton2D"]
+rotation = -0.785398
+scale = Vector2(9.52344, 3.69187)
+rest = Transform2D(3.93409, -3.93409, 2.61055, 2.61054, 0, 0)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_uibpb")
+offset_left = -280.0
+offset_top = -280.0
+offset_right = 232.0
+offset_bottom = 232.0
+texture = SubResource("ViewportTexture_5c1v2")
+
+[connection signal="state_entered" from="StateChart/CompoundState/Transferred" to="." method="_on_transferred_state_entered"]
+[connection signal="state_entered" from="StateChart/CompoundState/Free" to="." method="_on_free_state_entered"]

@@ -1,0 +1,68 @@
+[gd_scene load_steps=9 format=3 uid="uid://c61lyksfdy6jk"]
+
+[ext_resource type="PackedScene" uid="uid://c38l2kcch2j1e" path="res://PipelineSystem/transport/PipelineTransport.tscn" id="1_8yw7t"]
+[ext_resource type="Script" path="res://PipelineSystem/snap_point.gd" id="2_dm3pm"]
+[ext_resource type="Shader" path="res://experiments/pipeline_system/volume_show.gdshader" id="2_nw241"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnmmb"]
+resource_local_to_scene = true
+shader = ExtResource("2_nw241")
+shader_parameter/volume = 0.0
+shader_parameter/max_volume = 10.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tvvxp"]
+size = Vector2(32, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6a6pg"]
+size = Vector2(16, 24)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mnl12"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wcpyq"]
+radius = 3.0
+
+[node name="PipelineTransport" instance=ExtResource("1_8yw7t")]
+
+[node name="Sprite2D" parent="." index="1"]
+material = SubResource("ShaderMaterial_bnmmb")
+frame = 2
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("RectangleShape2D_tvvxp")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." index="3"]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_6a6pg")
+
+[node name="SnapLeft" type="Area2D" parent="SnapPoints" index="0"]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_dm3pm")
+snap_direction = 180
+
+[node name="SnapLeft" type="CollisionShape2D" parent="SnapPoints/SnapLeft" index="0"]
+position = Vector2(-16, 0)
+shape = SubResource("CircleShape2D_mnl12")
+debug_color = Color(0.537255, 0.564706, 0.192157, 0.419608)
+
+[node name="SnapRight" type="Area2D" parent="SnapPoints" index="1"]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_dm3pm")
+
+[node name="SnapRight" type="CollisionShape2D" parent="SnapPoints/SnapRight" index="0"]
+position = Vector2(16, 0)
+shape = SubResource("CircleShape2D_wcpyq")
+debug_color = Color(0.537255, 0.564706, 0.192157, 0.419608)
+
+[node name="SnapBottom" type="Area2D" parent="SnapPoints" index="2"]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("2_dm3pm")
+snap_direction = 270
+
+[node name="SnapBottom" type="CollisionShape2D" parent="SnapPoints/SnapBottom" index="0"]
+position = Vector2(0, 16)
+shape = SubResource("CircleShape2D_mnl12")
+debug_color = Color(0.537255, 0.564706, 0.192157, 0.419608)

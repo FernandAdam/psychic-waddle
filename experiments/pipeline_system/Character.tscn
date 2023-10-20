@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2w26hqspkf5"]
+
+[ext_resource type="Script" path="res://experiments/pipeline_system/Character.gd" id="1_qip3c"]
+[ext_resource type="Texture2D" uid="uid://1c30fr8488np" path="res://icon.svg" id="2_wvhna"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_33iqs"]
+size = Vector2(6, 14)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_of4e3"]
+radius = 38.0132
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_qip3c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_33iqs")
+
+[node name="InteractionView" type="Area2D" parent="."]
+collision_layer = 6
+collision_mask = 6
+input_pickable = false
+monitorable = false
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="InteractionView"]
+shape = SubResource("CircleShape2D_of4e3")
+one_way_collision_margin = 0.0
+debug_color = Color(0.615686, 0.368627, 0.980392, 0.419608)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(10, -10)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_wvhna")
+
+[connection signal="area_entered" from="InteractionView" to="." method="_on_interaction_view_area_entered"]
+[connection signal="area_exited" from="InteractionView" to="." method="_on_interaction_view_area_exited"]
+[connection signal="body_entered" from="InteractionView" to="." method="_on_interaction_view_body_entered"]
+[connection signal="body_exited" from="InteractionView" to="." method="_on_interaction_view_body_exited"]

@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1xwspf1eujsi"]
+
+[ext_resource type="Script" path="res://PipelineSystem/snap_point.gd" id="1_g2ind"]
+[ext_resource type="PackedScene" uid="uid://b40xwvjfxjqyw" path="res://PipelineSystem/donator/PipelineDonator.tscn" id="1_n7bbh"]
+[ext_resource type="Shader" path="res://experiments/pipeline_system/volume_show.gdshader" id="2_2lacs"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_33lp2"]
+resource_local_to_scene = true
+shader = ExtResource("2_2lacs")
+shader_parameter/volume = 0.0
+shader_parameter/max_volume = 10.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f7e5n"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xkdkh"]
+radius = 3.0
+
+[node name="PipelineDonatorMechanicalWell" instance=ExtResource("1_n7bbh")]
+z_index = 0
+output_flow = 60.0
+
+[node name="Sprite2D" parent="." index="1"]
+material = SubResource("ShaderMaterial_33lp2")
+
+[node name="CollisionShape2D" parent="." index="2"]
+shape = SubResource("CapsuleShape2D_f7e5n")
+
+[node name="SnapTop" type="Area2D" parent="SnapPoints" index="0"]
+collision_layer = 4
+collision_mask = 4
+script = ExtResource("1_g2ind")
+snap_direction = 90
+
+[node name="SnapTop" type="CollisionShape2D" parent="SnapPoints/SnapTop" index="0"]
+position = Vector2(0, -16)
+shape = SubResource("CircleShape2D_xkdkh")
+debug_color = Color(0.537255, 0.564706, 0.192157, 0.419608)
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwxqah4lgnntv"]
+
+[ext_resource type="Script" path="res://PipelineSystem/PipelineSystem.gd" id="1_owa4a"]
+
+[node name="PipelineSystem" type="Node2D"]
+z_index = -2
+script = ExtResource("1_owa4a")

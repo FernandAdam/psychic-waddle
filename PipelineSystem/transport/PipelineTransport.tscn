@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://c38l2kcch2j1e"]
+
+[ext_resource type="Script" path="res://PipelineSystem/transport/PipelineTransport.gd" id="1_2gow6"]
+[ext_resource type="Shader" path="res://experiments/pipeline_system/volume_show.gdshader" id="3_puwvi"]
+[ext_resource type="Texture2D" uid="uid://bbolyuwyg2upr" path="res://PipelineSystem/transport/pipeline_transport.png" id="3_vnc6v"]
+[ext_resource type="PackedScene" uid="uid://b3155dmrvngt1" path="res://PipelineSystem/Pipeline.tscn" id="1_n7bbh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_axr4b"]
+resource_local_to_scene = true
+shader = ExtResource("3_puwvi")
+shader_parameter/volume = 0.0
+shader_parameter/max_volume = 10.0
+
+[node name="PipelineTransport" instance=ExtResource("1_n7bbh")]
+script = ExtResource("1_2gow6")
+
+[node name="Sprite2D" parent="." index="1"]
+material = SubResource("ShaderMaterial_axr4b")
+texture = ExtResource("3_vnc6v")
+hframes = 5
+vframes = 6
