@@ -17,7 +17,6 @@ radius = 3.0
 
 [node name="PipelineDonatorMechanicalWell" instance=ExtResource("1_n7bbh")]
 z_index = 0
-output_flow = 60.0
 
 [node name="Sprite2D" parent="." index="1"]
 material = SubResource("ShaderMaterial_33lp2")

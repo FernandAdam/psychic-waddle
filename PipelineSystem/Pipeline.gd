@@ -92,13 +92,18 @@ func try_snap(obj: SnapPoint) -> bool:
 	for snap_point in snap_points:
 		if (snap_point.snap_direction+180)%360 == obj.snap_direction:
 			placed_pos = obj.global_position + Vector2.from_angle(-PI/180*obj.snap_direction) * 32
-			#snapped_to.append(obj.get_parent())
+			#snapped_business process engineering kasselto.append(obj.get_parent())
 			#obj.get_parent().snap_to(self)
 			obj.set_partner(snap_point)
 			sm.send_event("snap")
 			sm.set_expression_property("snapped_to", snapped_to)
 			return true 
 	return false
+	
+func rotate_rad(rad: float):
+	rotation += rad
+	for snap_point in snap_points:
+		snap_point.rotate_rad(rad)
 	
 ###
 ### Liquid System part

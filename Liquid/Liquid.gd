@@ -114,3 +114,11 @@ func _on_transferred_state_entered() -> void:
 
 func _on_free_state_entered() -> void:
 	state = "Free"
+
+
+func _on_transferred_state_exited() -> void:
+	pass # Replace with function body.
+
+
+func _on_transferred_state_physics_processing(delta) -> void:
+	pass # Replace with function body.

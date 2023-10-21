@@ -42,6 +42,9 @@ func _physics_process(_delta: float) -> void:
 						print("ok...")
 						snapable_objects.erase(snap_point)
 				view_objects.remove_at(0)
+	if Input.is_action_just_pressed("rotate"):
+		if right_hand_item != null:
+			right_hand_item.rotate_rad(PI/2)
 			
 		
 	velocity = velocity.normalized() * max_velocity

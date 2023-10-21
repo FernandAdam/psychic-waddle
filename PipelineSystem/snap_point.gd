@@ -55,3 +55,6 @@ func check_liquid() -> Liquid:
 			return body
 	
 	return null
+
+func rotate_rad(rad: float) -> void:
+	snap_direction -= int(rad/PI*180)
